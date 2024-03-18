@@ -67,18 +67,36 @@ function GameController() {
         console.log(`It is now ${activePlayer.name}'s turn.`);
     }
 
-    const checkWinner = () => {
-        const currentMark = getActivePlayer().mark;
-        const allEqual = arr => arr.every(val => {
-            console.log({val});
-            return val === currentMark;
-        });
-        const result = allEqual(currentBoard);
-        console.log(result);
+    function CheckWinner() {
+        const XO = activePlayer.symbol;
+
+        // Check for horizontal winner
+        const horizontal = () => {
+            return currentBoard.some(row => row.every(cell => cell === XO));
+        }
+
+        // Check for vertical winner
+        const vertical = () => {
+            return currentBoard.some((whatever, columnIndex) => 
+            currentBoard.every(row => row[columnIndex] === XO))
+        }
+
+        // Check for diagonal winner
+        const diagonal = () => {
+            if ((currentBoard[0][0] === XO && currentBoard[1][1] === XO && currentBoard[2][2] === XO) || 
+                (currentBoard[0][2] === XO && currentBoard[1][1] === XO && currentBoard[2][0] === XO)) {
+                return true;
+            }
+            return false;
+        }
+        
+        return { horizontal, vertical, diagonal };
     }
 
     const playRound = function(row, column) {
         const cell = currentBoard[row][column];
+        const checkWinner = CheckWinner();
+
         if (cell !== null) {
             console.log("This square has already been marked. Try again.");
             return;
@@ -86,10 +104,16 @@ function GameController() {
             board.updateCell(row, column, activePlayer.symbol);
             console.log(`${activePlayer.symbol} has been marked on row ${row}, column ${column}.`)
 
-            checkWinner();
-            
-            switchPlayerTurn();
-            printNewRound();
+            if (checkWinner.horizontal() || checkWinner.vertical() || checkWinner.diagonal()) {
+                board.printBoard();
+                console.log(`${activePlayer.name} is the winner!`);
+            } else if (!currentBoard.some(row => row.includes(null))) {
+                board.printBoard();
+                console.log("The game has ended in a tie!");
+            } else {
+                switchPlayerTurn();
+                printNewRound();
+            }
         }
     }
 
@@ -99,8 +123,3 @@ function GameController() {
 }
 
 const game = GameController();
-game.playRound(0,0);
-game.playRound(2,2);
-game.playRound(0,1);
-game.playRound(2,1);
-game.playRound(0,2);
