@@ -29,7 +29,8 @@ body {
 
 .player-one.active-player {
     background-color: rgb(72, 163, 248);
-    border: 2px solid black;
+    /* border: 2px solid black; */
+    outline: black solid 2px;
 }
 
 .player-two {
@@ -39,7 +40,8 @@ body {
 
 .player-two.active-player {
     background-color: orange;
-    border: 2px solid black;
+    /* border: 2px solid black; */
+    outline: black solid 2px;
 }
 
 .gameboard {
@@ -53,7 +55,12 @@ body {
 .square {
     font-size: 4rem;
     border: 3px solid black;
+    border-radius: 10px;
     min-width: 100px;
     background-color: lightgray;
     box-shadow: 3px 3px 3px rgb(0, 0, 0, .2);
+}
+
+.in-game-message {
+    
 }

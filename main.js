@@ -18,17 +18,11 @@ function Gameboard () {
 
     const getBoard = () => board;
 
-    // Print board to console
-    const printBoard = () => {
-        const boardWithCellValues = board.map((row) => row.map((cell) => cell));
-        console.log(boardWithCellValues);
-    };
-
     const updateCell = (row, column, symbol) => {
         board[row][column] = symbol;
     }
 
-    return { getBoard, printBoard, updateCell };
+    return { getBoard, updateCell };
 }
 
 function Players(playerOneName = "Player 1", playerTwoName = "Player 2") {
@@ -59,11 +53,6 @@ function GameController() {
 
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
-    }
-
-    const printNewRound = () => {
-        board.printBoard();
-        console.log(`It is now ${activePlayer.name}'s turn.`);
     }
 
     function CheckWinner() {
@@ -99,26 +88,25 @@ function GameController() {
         const checkWinner = CheckWinner();
 
         if (cell !== null) {
+            // TODO: Display error message
             console.log("This square has already been marked. Try again.");
             return;
         } else {
             board.updateCell(row, column, activePlayer.symbol);
+            //TODO: Display marking information
             console.log(`${activePlayer.symbol} has been marked on row ${row}, column ${column}.`)
 
             if (checkWinner.horizontal() || checkWinner.vertical() || checkWinner.diagonal()) {
-                board.printBoard();
+                // Display modal with win message and play again button.
                 console.log(`${activePlayer.name} is the winner!`);
             } else if (!currentBoard.some(row => row.includes(null))) {
-                board.printBoard();
+                // Display modal with tie message and play again button.
                 console.log("The game has ended in a tie!");
             } else {
                 switchPlayerTurn();
-                printNewRound();
             }
         }
     }
-
-    printNewRound();
 
     return { getActivePlayer, playRound, getBoard: board.getBoard, getPlayers: playersFactory.getPlayers };
 }
@@ -155,10 +143,8 @@ function DisplayController() {
                 cellButton.dataset.column = columnIndex;
                 cellButton.textContent = cell;
                 gameboardDiv.appendChild(cellButton);
-                
             })
         })
-        
     }
 
     function clickHandlerBoard(e) {
