@@ -52,7 +52,6 @@ function GameController() {
     const playersFactory = Players();
     const players = playersFactory.getPlayers();
     const board = Gameboard();
-    const currentBoard = board.getBoard();
 
     let activePlayer = players[0];
 
@@ -68,6 +67,7 @@ function GameController() {
     }
 
     function CheckWinner() {
+        const currentBoard = board.getBoard();
         const XO = activePlayer.symbol;
 
         // Check for horizontal winner
@@ -94,6 +94,7 @@ function GameController() {
     }
 
     const playRound = function(row, column) {
+        const currentBoard = board.getBoard();
         const cell = currentBoard[row][column];
         const checkWinner = CheckWinner();
 
@@ -119,7 +120,61 @@ function GameController() {
 
     printNewRound();
 
-    return { getActivePlayer, playRound };
+    return { getActivePlayer, playRound, getBoard: board.getBoard, getPlayers: playersFactory.getPlayers };
 }
 
-const game = GameController();
+function DisplayController() {
+    const game = GameController();
+    const players = game.getPlayers();
+
+    const gameboardDiv = document.querySelector(".gameboard");
+    const playerOneDiv = document.querySelector(".player-one");
+    const playerTwoDiv = document.querySelector(".player-two");
+
+    const updateScreen = () => {
+        // Get rid of all child elements
+        gameboardDiv.textContent = "";
+
+        // Highlight active player
+        const activePlayer = game.getActivePlayer();
+        if (activePlayer === players[0]) {
+            playerOneDiv.classList.add("active-player");
+            playerTwoDiv.classList.remove("active-player");
+        } else {
+            playerOneDiv.classList.remove("active-player");
+            playerTwoDiv.classList.add("active-player");
+        }
+
+        const currentBoard = game.getBoard();
+        currentBoard.forEach((row, rowIndex) => {
+            row.forEach((cell, columnIndex) => {
+                const cellButton = document.createElement("button");
+                cellButton.classList.add("square");
+                
+                cellButton.dataset.row = rowIndex;
+                cellButton.dataset.column = columnIndex;
+                cellButton.textContent = cell;
+                gameboardDiv.appendChild(cellButton);
+                
+            })
+        })
+        
+    }
+
+    function clickHandlerBoard(e) {
+        if (e.target.classList.contains("square")) {
+            const selectedRow = e.target.dataset.row;
+            const selectedColumn = e.target.dataset.column;
+
+            game.playRound(selectedRow, selectedColumn);
+            updateScreen();
+        }
+    }
+
+    gameboardDiv.addEventListener("click", clickHandlerBoard);
+
+    updateScreen();
+}
+
+// const game = GameController();
+const display = DisplayController();
