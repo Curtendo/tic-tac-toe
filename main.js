@@ -112,6 +112,7 @@ function GameController() {
             // Winner
             if (checkWinner.horizontal() || checkWinner.vertical() || checkWinner.diagonal()) {
                 winnerResult = activePlayer.name
+                activePlayer.wins += 1;
             // Tie
             } else if (!currentBoard.some(row => row.includes(null))) {
                 isTie = true;
@@ -143,6 +144,8 @@ function DisplayController() {
     const inGameMessageDiv = document.querySelector(".in-game-message");
     const gameResultModal = document.querySelector("#game-result");
     const modalHeader = document.querySelector("#modal-header");
+    const playerOneScoreSpan = document.querySelector(".player-one-score");
+    const playerTwoScoreSpan = document.querySelector(".player-two-score");
 
     const moveMessages = [
         "Nice move!",
@@ -190,6 +193,8 @@ function DisplayController() {
 
     const showModalWinner = () => {
         modalHeader.textContent = `${game.getActivePlayer().name} has won!`;
+        playerOneScoreSpan.textContent = players[0].wins;
+        playerTwoScoreSpan.textContent = players[1].wins;
         gameResultModal.showModal();
     }
 

@@ -15,13 +15,17 @@
             <div class="gameboard"></div>
             <div class="player player-two">Player Two</div>
         </div>
-        <div class="in-game-message">Player one, let's start!</div>
+        <div class="in-game-message">Player One, let's start!</div>
     </div>
     <dialog id="game-result">
-        <h2 id="modal-header">Somebody has won!</h2>
-        <p>Player One:<span class="player-one-score"></span></p>
-        <p>Player Two:<span class="player-two-score"></span></p>
-        <button class="play-again">Play again!</button>
+        <div class="dialog-container">
+            <h2 id="modal-header">Winner text</h2>
+            <div class="player-scores">
+                <p>Player One's Score: <span class="player-one-score"></span></p>
+                <p>Player Two's Score: <span class="player-two-score"></span></p>
+            </div>
+            <button id="play-again">Play again!</button>
+        </div>
     </dialog>
     <footer>Curtendo 2024</footer>
 </body>
