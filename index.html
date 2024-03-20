@@ -21,10 +21,33 @@
         <div class="dialog-container">
             <h2 id="modal-header">Winner text</h2>
             <div class="player-scores">
-                <p>Player One's Score: <span class="player-one-score"></span></p>
-                <p>Player Two's Score: <span class="player-two-score"></span></p>
+                <p>
+                    <span>
+                        <span class="player-one-name"></span>'s Score: 
+                    </span>
+                    <span class="player-score player-one-score"></span>
+                </p>
+                <p>
+                    <span>
+                        <span class="player-two-name"></span>'s Score: 
+                    </span>
+                    <span class="player-score player-two-score"></span>
+                </p>
             </div>
             <button id="play-again">Play again!</button>
+        </div>
+    </dialog>
+    <dialog id="game-start">
+        <div class="dialog-container">
+            <h2 id="game-start-header">Enter your names</h2>
+            <form id="name-form">
+                <label for="player-one-input" focus>Player One</label>
+                <input type="text" name="player-one-input" id="player-one-input" maxlength="10" autocomplete="off">
+                <label for="player-two-input">Player Two</label>
+                <input type="text" name="player-two-input" id="player-two-input" maxlength="10" autocomplete="off">
+                <button type="submit" id="start-game-button">Start!</button>
+            </form>
+            
         </div>
     </dialog>
     <footer>Curtendo 2024</footer>

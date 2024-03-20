@@ -23,12 +23,14 @@ html, body {
 .player {
     margin: 0 50px;
     padding: 5px 15px;
+    width: 230px;
     font-size: 1.7rem;
     border: 2px solid black;
     border-radius: 5px;
     height: fit-content;
     border: 1px solid gray;
     color: gray;
+    text-align: center;
 }
 
 .player-one {
@@ -78,11 +80,41 @@ html, body {
     border-radius: 10px;
 }
 
+#game-start {
+    border-radius: 10px;
+}
+
 .dialog-container {
-    
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.dialog-container>form {
+    display: flex;
+    flex-direction: column;
+    margin: 8px;
+    font-size: 1.4rem;
+}
+
+form>label {
+    margin-top: 10px;
+    margin-bottom: 3px;
+}
+
+form>input {
+    width: 270px;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    border-radius: 5px;
+    padding: 5px 10px;
+    outline: black solid 2px;
+    border: none;
+    box-shadow: 2px 2px 5px rgb(0, 0, 0, .2);
+}
+
+form>input:focus {
+    box-shadow: inset 2px 2px 3px rgb(0, 0, 0, .2);
 }
 
 .dialog-container>h2 {
@@ -96,12 +128,23 @@ html, body {
     border-bottom: 1px solid lightgray;
 }
 
+.dialog-container .player-score {
+    margin-left: 10px;
+}
+
+.dialog-container .player-scores p {
+    display: flex;
+    justify-content: space-between;
+}
+
 .dialog-container>p {
     margin: 8px;
     font-size: 1.4rem;
 }
 
-.dialog-container>button {
+.dialog-container button {
+    width: fit-content;
+    align-self: center;
     margin-top: 30px;
     padding: 5px 20px;
     font-size: 1.2rem;

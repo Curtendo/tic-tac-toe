@@ -52,6 +52,12 @@ function GameController() {
 
     const getBoard = () => board.getBoard();
 
+    const updatePlayerNames = (playerOneName = "Player One", playerTwoName = "Player Two") => {
+        console.log({playerOneName, playerTwoName})
+        players[0].name = playerOneName;
+        players[1].name = playerTwoName;
+    }
+
     let activePlayer = players[0];
 
     const getActivePlayer = () => activePlayer;
@@ -123,14 +129,13 @@ function GameController() {
             // Tie
             } else if (!currentBoard.some(row => row.includes(null))) {
                 isTie = true;
-            // Normal move
-            } else {
-                switchPlayerTurn();
             }
+            switchPlayerTurn();
         }
     }
 
-    return { getActivePlayer, 
+    return { updatePlayerNames,
+        getActivePlayer, 
         playRound, 
         getBoard,
         getPlayers: playersFactory.getPlayers,
@@ -155,6 +160,8 @@ function DisplayController() {
     const playerOneScoreSpan = document.querySelector(".player-one-score");
     const playerTwoScoreSpan = document.querySelector(".player-two-score");
     const playAgainButton = document.querySelector("#play-again");
+    const startGameModal = document.querySelector("#game-start");
+    const startGameForm = document.querySelector("#name-form");
 
     const moveMessages = [
         "Nice move!",
@@ -199,6 +206,10 @@ function DisplayController() {
                 gameboardDiv.appendChild(cellButton);
             })
         })
+    }
+
+    const showModalStart = () => {
+        startGameModal.showModal();
     }
 
     const showModalWinner = () => {
@@ -248,11 +259,40 @@ function DisplayController() {
         gameResultModal.close();
     }
 
+    function clickHandlerStartGame(e) {
+        e.preventDefault();
+        let playerOneName = document.querySelector("#player-one-input").value;
+        let playerTwoName = document.querySelector("#player-two-input").value;
+
+        playerOneName = playerOneName === "" ? undefined : playerOneName;
+        playerTwoName = playerTwoName === "" ? undefined : playerTwoName;
+
+        game.updatePlayerNames(playerOneName, playerTwoName);
+
+        // Updates onscreen names
+        const playerOneDiv = document.querySelector(".player-one");
+        const playerTwoDiv = document.querySelector(".player-two");
+
+        playerOneDiv.textContent = game.getPlayers()[0].name;
+        playerTwoDiv.textContent = game.getPlayers()[1].name;
+
+        // Updates names on end game modal
+        const playerOneNameSpan = document.querySelector(".player-one-name");
+        const playerTwoNameSpan = document.querySelector(".player-two-name");
+
+        playerOneNameSpan.textContent = game.getPlayers()[0].name;
+        playerTwoNameSpan.textContent = game.getPlayers()[1].name;
+
+        startGameModal.close();
+    }
 
     gameboardDiv.addEventListener("click", clickHandlerBoard);
     playAgainButton.addEventListener("click", clickHandlerPlayAgain);
+    startGameForm.addEventListener("submit", clickHandlerStartGame);
+
 
     updateGameboard();
+    showModalStart();
 }
 
 DisplayController();
