@@ -2,11 +2,18 @@
     box-sizing: border-box;
 }
 
-body {
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
 }
 
 .main-container {
@@ -62,5 +69,11 @@ body {
 }
 
 .in-game-message {
-    
+    margin: 20px;
+    font-size: 2rem;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
 }

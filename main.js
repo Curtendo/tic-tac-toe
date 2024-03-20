@@ -1,5 +1,4 @@
 function Gameboard () {
-    // Gameboard
     const rows = 3;
     const columns = 3;
 
@@ -25,15 +24,18 @@ function Gameboard () {
     return { getBoard, updateCell };
 }
 
+// Player object
 function Players(playerOneName = "Player 1", playerTwoName = "Player 2") {
     const players = [
         {
             name: playerOneName,
-            symbol: "X"
+            symbol: "X",
+            wins: 0
         },
         {
             name: playerTwoName,
-            symbol: "O"
+            symbol: "O",
+            wins: 0
         }
     ]
 
@@ -42,6 +44,7 @@ function Players(playerOneName = "Player 1", playerTwoName = "Player 2") {
     return { getPlayers };
 }
 
+// All game handling logic
 function GameController() {
     const playersFactory = Players();
     const players = playersFactory.getPlayers();
@@ -82,35 +85,54 @@ function GameController() {
         return { horizontal, vertical, diagonal };
     }
 
+    let winnerResult;
+    const getWinnerResult = () => winnerResult;
+
+    let isValidMove;
+    const getIsValidMove = () => isValidMove;
+
+    let isTie;
+    const getIsTie = () => isTie;
+
     const playRound = function(row, column) {
         const currentBoard = board.getBoard();
         const cell = currentBoard[row][column];
         const checkWinner = CheckWinner();
+        isValidMove = null;
+        winnerResult = null;
+        isTie = null;
 
         if (cell !== null) {
-            // TODO: Display error message
-            console.log("This square has already been marked. Try again.");
+            isValidMove = false;
             return;
         } else {
             board.updateCell(row, column, activePlayer.symbol);
-            //TODO: Display marking information
-            console.log(`${activePlayer.symbol} has been marked on row ${row}, column ${column}.`)
+            isValidMove = true;
 
+            // Winner
             if (checkWinner.horizontal() || checkWinner.vertical() || checkWinner.diagonal()) {
-                // Display modal with win message and play again button.
-                console.log(`${activePlayer.name} is the winner!`);
+                winnerResult = activePlayer.name
+            // Tie
             } else if (!currentBoard.some(row => row.includes(null))) {
-                // Display modal with tie message and play again button.
-                console.log("The game has ended in a tie!");
+                isTie = true;
+            // Normal move
             } else {
                 switchPlayerTurn();
             }
         }
     }
 
-    return { getActivePlayer, playRound, getBoard: board.getBoard, getPlayers: playersFactory.getPlayers };
+    return { getActivePlayer, 
+        playRound, 
+        getBoard: board.getBoard, 
+        getPlayers: playersFactory.getPlayers,
+        getWinnerResult,
+        getIsValidMove,
+        getIsTie
+    };
 }
 
+// All UI interactments
 function DisplayController() {
     const game = GameController();
     const players = game.getPlayers();
@@ -118,8 +140,27 @@ function DisplayController() {
     const gameboardDiv = document.querySelector(".gameboard");
     const playerOneDiv = document.querySelector(".player-one");
     const playerTwoDiv = document.querySelector(".player-two");
+    const inGameMessageDiv = document.querySelector(".in-game-message");
+    const gameResultModal = document.querySelector("#game-result");
+    const modalHeader = document.querySelector("#modal-header");
 
-    const updateScreen = () => {
+    const moveMessages = [
+        "Nice move!",
+        "Oh, you went there?",
+        "What's gonna happen next?!",
+        "I didn't think of that!",
+        "This is so intense!",
+        "Did you even think?",
+        "Wow!",
+        "Maybe you should ask you're mommy for help?",
+        "You can do it!",
+        "What was that for???",
+        "Unbelieveable!!!",
+        "How is your brain so awesome?",
+        "Well, OK then...",
+    ]
+
+    const updateGameboard = () => {
         // Get rid of all child elements
         gameboardDiv.textContent = "";
 
@@ -147,20 +188,48 @@ function DisplayController() {
         })
     }
 
+    const showModalWinner = () => {
+        modalHeader.textContent = `${game.getActivePlayer().name} has won!`;
+        gameResultModal.showModal();
+    }
+
+    const showModalTie = () => {
+        modalHeader.textContent = `Tie game!`;
+        gameResultModal.showModal();
+    }
+
+    const updateMoveMessage = (validity) => {
+        if (validity) {
+            // Pulls random message from message array
+            const index = Math.floor(Math.random() * moveMessages.length);
+            inGameMessageDiv.textContent = moveMessages[index];
+        } else {
+            inGameMessageDiv.textContent = "You can't go there. Try again."
+        }
+    }
+
     function clickHandlerBoard(e) {
         if (e.target.classList.contains("square")) {
             const selectedRow = e.target.dataset.row;
             const selectedColumn = e.target.dataset.column;
 
             game.playRound(selectedRow, selectedColumn);
-            updateScreen();
+            updateGameboard();
+
+            if (game.getWinnerResult()) {
+                showModalWinner();
+            } else if (game.getIsTie()) {
+                showModalTie();
+            } else {
+                updateMoveMessage(game.getIsValidMove);
+            }
+            
         }
     }
 
     gameboardDiv.addEventListener("click", clickHandlerBoard);
 
-    updateScreen();
+    updateGameboard();
 }
 
-// const game = GameController();
-const display = DisplayController();
+DisplayController();
