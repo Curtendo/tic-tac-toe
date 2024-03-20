@@ -27,6 +27,8 @@ html, body {
     border: 2px solid black;
     border-radius: 5px;
     height: fit-content;
+    border: 1px solid gray;
+    color: gray;
 }
 
 .player-one {
@@ -36,19 +38,18 @@ html, body {
 
 .player-one.active-player {
     background-color: rgb(72, 163, 248);
-    /* border: 2px solid black; */
     outline: black solid 2px;
+    color: black;
 }
 
 .player-two {
     background-color: rgb(255, 166, 0, .2);
-    border: 1px solid black;
 }
 
 .player-two.active-player {
     background-color: orange;
-    /* border: 2px solid black; */
     outline: black solid 2px;
+    color: black;
 }
 
 .gameboard {

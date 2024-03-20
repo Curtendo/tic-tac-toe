@@ -21,7 +21,7 @@ function Gameboard () {
         board[row][column] = symbol;
     }
 
-    return { getBoard, updateCell };
+    return { getBoard, updateCell, };
 }
 
 // Player object
@@ -48,7 +48,9 @@ function Players(playerOneName = "Player 1", playerTwoName = "Player 2") {
 function GameController() {
     const playersFactory = Players();
     const players = playersFactory.getPlayers();
-    const board = Gameboard();
+    let board = Gameboard();
+
+    const getBoard = () => board.getBoard();
 
     let activePlayer = players[0];
 
@@ -57,6 +59,10 @@ function GameController() {
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
     }
+
+    const resetGame = () => {
+        board = Gameboard();
+    };
 
     function CheckWinner() {
         const currentBoard = board.getBoard();
@@ -98,6 +104,7 @@ function GameController() {
         const currentBoard = board.getBoard();
         const cell = currentBoard[row][column];
         const checkWinner = CheckWinner();
+
         isValidMove = null;
         winnerResult = null;
         isTie = null;
@@ -125,18 +132,19 @@ function GameController() {
 
     return { getActivePlayer, 
         playRound, 
-        getBoard: board.getBoard, 
+        getBoard,
         getPlayers: playersFactory.getPlayers,
         getWinnerResult,
         getIsValidMove,
-        getIsTie
+        getIsTie,
+        resetGame
     };
 }
 
 // All UI interactments
 function DisplayController() {
-    const game = GameController();
-    const players = game.getPlayers();
+    let game = GameController();
+    let players = game.getPlayers();
 
     const gameboardDiv = document.querySelector(".gameboard");
     const playerOneDiv = document.querySelector(".player-one");
@@ -146,6 +154,7 @@ function DisplayController() {
     const modalHeader = document.querySelector("#modal-header");
     const playerOneScoreSpan = document.querySelector(".player-one-score");
     const playerTwoScoreSpan = document.querySelector(".player-two-score");
+    const playAgainButton = document.querySelector("#play-again");
 
     const moveMessages = [
         "Nice move!",
@@ -178,6 +187,7 @@ function DisplayController() {
         }
 
         const currentBoard = game.getBoard();
+
         currentBoard.forEach((row, rowIndex) => {
             row.forEach((cell, columnIndex) => {
                 const cellButton = document.createElement("button");
@@ -226,13 +236,21 @@ function DisplayController() {
             } else if (game.getIsTie()) {
                 showModalTie();
             } else {
-                updateMoveMessage(game.getIsValidMove);
+                updateMoveMessage(game.getIsValidMove());
             }
             
         }
     }
 
+    function clickHandlerPlayAgain() {
+        game.resetGame();
+        updateGameboard();
+        gameResultModal.close();
+    }
+
+
     gameboardDiv.addEventListener("click", clickHandlerBoard);
+    playAgainButton.addEventListener("click", clickHandlerPlayAgain);
 
     updateGameboard();
 }
